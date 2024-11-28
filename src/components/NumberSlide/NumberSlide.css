@@ -1,0 +1,87 @@
+
+:host {
+  color: #ccc;
+  --button-width: 80px;
+}
+
+
+.number-container {
+  width: 360px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.number-container::before,
+.number-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(50% - var(--button-width) / 2);
+  pointer-events: none;
+
+
+  /* Add blur effect */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px); /* For Safari */
+  
+  /* Fallback for browsers that don't support backdrop-filter */
+  background: rgba(0, 0, 0, 0.4);
+
+}
+
+.number-container::before {
+  left: 0;
+    /* Create a gradient mask for the blur effect */
+    -webkit-mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 90%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  
+    mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 90%,
+      rgba(0, 0, 0, 0) 100%
+    );
+}
+
+.number-container::after {
+  right: 0;
+  -webkit-mask-image: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.inner {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  width: 100%;
+  gap: 5px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+
+button {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+}
+
