@@ -42,10 +42,14 @@ class NumberSlide extends HTMLElement {
   private renderNumbers() {
     const container = this.shadowRoot?.querySelector(".number-container");
     const innerElement = document.createElement("div");
+    const innerSpacerLeft = document.createElement("div");
+    const innerSpacerRight = document.createElement("div");
     innerElement.classList.add("inner");
     if (container) {
       container.innerHTML = "";
       container.appendChild(innerElement);
+      innerElement.appendChild(innerSpacerLeft);
+      innerSpacerLeft.classList.add("spacer");
       for (let i = this.min; i <= this.max; i++) {
         const numberElement = document.createElement("div");
         numberElement.textContent = i.toString();
@@ -53,6 +57,8 @@ class NumberSlide extends HTMLElement {
         numberElement.addEventListener("click", () => this.onNumberClick(i));
         innerElement.appendChild(numberElement);
       }
+      innerElement.appendChild(innerSpacerRight);
+      innerSpacerRight.classList.add("spacer");
     }
   }
 
