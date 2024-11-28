@@ -1,4 +1,4 @@
-import css from "./InjectedContent.styles";
+import css from "./NumberSlide.styles";
 
 const template = document.createElement("template");
 
@@ -6,16 +6,16 @@ template.innerHTML = `
   <style>${css}</style><slot/>
 `;
 
-class InjectedContent extends HTMLElement {
+class NumberSlide extends HTMLElement {
   constructor() {
     super();
   }
   connectedCallback() {
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.shadowRoot?.appendChild(template.content.cloneNode(true));
   }
 }
 
 export default () => {
-  window.customElements.define("injected-content", InjectedContent);
+  window.customElements.define("number-slide", NumberSlide);
 };

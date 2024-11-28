@@ -1,11 +1,6 @@
 import BackgroundNoise from "./BackgroundNoise/BackgroundNoise";
-import GridBase from "./Grid/GridBase/GridBase";
-import InjectedContent from "./InjectedContent/InjectedContent";
-import HeroImage from "./HeroImage/HeroImage";
-
+import NumberSlide from "./NumberSlide/NumberSlide";
 export default function init() {
-  GridBase();
   BackgroundNoise();
-  InjectedContent();
-  HeroImage();
+  NumberSlide();
 }

@@ -1,9 +1,10 @@
-import css from "./BackgroundNoise.styles";
+import css from "./BackgroundNoise.css?raw";
 
 const template = document.createElement("template");
 
 template.innerHTML = `
-  <style>${css}</style><slot/>
+  <style>${css}</style>
+  <slot />
 `;
 
 class BackgroundNoise extends HTMLElement {
@@ -12,7 +13,7 @@ class BackgroundNoise extends HTMLElement {
   }
   connectedCallback() {
     this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.shadowRoot?.appendChild(template.content.cloneNode(true));
   }
 }
 
