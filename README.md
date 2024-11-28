@@ -1,0 +1,1 @@
+![DALL·E 2024-11-28 08 06 27 - A conceptual and artistic representation of a human head's side profile, focusing on an 'inner face' design  The face appears inverted or turned insid](https://github.com/user-attachments/assets/5b7d7af8-564c-4fbf-afdc-dc60269729c4)
