@@ -47,7 +47,7 @@ class NumberSlide extends HTMLElement {
       container.innerHTML = "";
       container.appendChild(innerElement);
       for (let i = this.min; i <= this.max; i++) {
-        const numberElement = document.createElement("button");
+        const numberElement = document.createElement("div");
         numberElement.textContent = i.toString();
         numberElement.classList.add("number-item");
         numberElement.addEventListener("click", () => this.onNumberClick(i));
