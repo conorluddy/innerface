@@ -1,0 +1,20 @@
+html,
+body {
+  --font-family-header: "Rajdhani", sans-serif;
+  --font-family-body: "Monda", sans-serif;
+  color: #ccc;
+  font-family: var(--font-family-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-family-header);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+body {
+}
