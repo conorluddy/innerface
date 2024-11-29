@@ -4,13 +4,15 @@ const template = document.createElement("template");
 
 template.innerHTML = `
   <style>${css}</style>
-  <label><span>REPS</span></label>
+  <label><span>KG</span></label>
   <div class="number-container"></div>
 `;
 
 class NumberSlide extends HTMLElement {
+  private label: string = "Number";
   private min: number = 1;
   private max: number = 10;
+  private step: number = 1;
   private _value: number = 1;
 
   constructor() {
@@ -33,12 +35,12 @@ class NumberSlide extends HTMLElement {
   }
 
   connectedCallback() {
-    this.updateMinMax();
+    this.updateAttributes();
     this.renderNumbers();
   }
 
   static get observedAttributes() {
-    return ["min", "max", "value"];
+    return ["min", "max", "value", "label", "step"];
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
@@ -46,7 +48,7 @@ class NumberSlide extends HTMLElement {
       if (name === "value") {
         this.value = parseInt(newValue, 10);
       } else {
-        this.updateMinMax();
+        this.updateAttributes();
         this.renderNumbers();
       }
       this.setupEventListeners();
@@ -60,9 +62,11 @@ class NumberSlide extends HTMLElement {
     }
   }
 
-  private updateMinMax() {
-    this.min = parseInt(this.getAttribute("min") || "1", 10);
-    this.max = parseInt(this.getAttribute("max") || "5", 10);
+  private updateAttributes() {
+    this.min = parseFloat(this.getAttribute("min") || "1");
+    this.max = parseFloat(this.getAttribute("max") || "5");
+    this.step = parseFloat(this.getAttribute("step") || "1");
+    this.label = this.getAttribute("label") || "Number";
   }
 
   private renderNumbers() {
@@ -71,24 +75,28 @@ class NumberSlide extends HTMLElement {
     const innerSpacerLeft = document.createElement("div");
     const innerSpacerRight = document.createElement("div");
     const selectionBox = document.createElement("div");
+    const label = this.shadowRoot?.querySelector("label span");
 
     innerElement.classList.add("inner");
-    if (container) {
+
+    if (container && label) {
+      label.innerHTML = this.label;
       container.innerHTML = "";
       container.appendChild(innerElement);
 
       innerElement.appendChild(innerSpacerLeft);
-
       innerSpacerLeft.classList.add("spacer");
 
-      for (let i = this.min; i <= this.max; i++) {
+      for (let i = this.min; i <= this.max; i += this.step) {
         const numberElement = document.createElement("div");
         numberElement.textContent = i.toString();
         numberElement.classList.add("number-item");
         innerElement.appendChild(numberElement);
       }
+
       innerElement.appendChild(innerSpacerRight);
       innerSpacerRight.classList.add("spacer");
+
       container.appendChild(selectionBox);
       selectionBox.classList.add("selection-box");
 
@@ -115,14 +123,7 @@ class NumberSlide extends HTMLElement {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           if (lastKnownScrollPosition % 80 === 0) {
-            const selectedNumber = lastKnownScrollPosition / 80;
-            this.value = selectedNumber;
-            // const event = new CustomEvent("number-selected", {
-            //   detail: selectedNumber,
-            //   bubbles: true,
-            //   composed: true,
-            // });
-            // this.dispatchEvent(event);
+            this.value = lastKnownScrollPosition / 80;
           }
           ticking = false;
         });
