@@ -28,10 +28,10 @@ class NumberSlide extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    console.log({ name });
     if (oldValue !== newValue) {
       this.updateMinMax();
       this.renderNumbers();
+      this.setupEventListeners();
     }
   }
 
@@ -57,8 +57,9 @@ class NumberSlide extends HTMLElement {
         const numberElement = document.createElement("div");
         numberElement.textContent = i.toString();
         numberElement.classList.add("number-item");
-        numberElement.addEventListener("click", () => this.onNumberClick(i));
         innerElement.appendChild(numberElement);
+
+        numberElement.addEventListener("click", () => this.onNumberClick(i));
       }
       innerElement.appendChild(innerSpacerRight);
       innerSpacerRight.classList.add("spacer");
@@ -79,6 +80,32 @@ class NumberSlide extends HTMLElement {
       composed: true,
     });
     this.dispatchEvent(event);
+  }
+
+  // private onScrollStop() {
+  //   console.log("Scrolling stopped");
+  // }
+
+  private setupEventListeners() {
+    let lastKnownScrollPosition = 0;
+    let ticking = false;
+
+    const scrollContainer = this.shadowRoot?.querySelector(
+      ".number-container .inner"
+    );
+    console.log("scrollContainer", scrollContainer);
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", (event) => {
+        lastKnownScrollPosition = scrollContainer.scrollLeft;
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            console.log({ lastKnownScrollPosition, event });
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+    }
   }
 }
 
