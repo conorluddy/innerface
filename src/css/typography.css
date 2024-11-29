@@ -17,4 +17,5 @@ h5 {
 }
 
 body {
+  font-family: var(--font-family-header);
 }

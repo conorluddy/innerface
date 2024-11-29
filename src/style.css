@@ -1,5 +1,7 @@
+@import "./css/index.css";
+
 :root {
-  font-family: 'Courier New', Courier, monospace;
+  /* font-family: 'Courier New', Courier, monospace; */
   line-height: 1.5;
   font-weight: 700;
 

@@ -4,6 +4,7 @@ const template = document.createElement("template");
 
 template.innerHTML = `
   <style>${css}</style>
+  <label><span>RATING</span></label>
   <div class="number-container"></div>
 `;
 
@@ -44,6 +45,8 @@ class NumberSlide extends HTMLElement {
     const innerElement = document.createElement("div");
     const innerSpacerLeft = document.createElement("div");
     const innerSpacerRight = document.createElement("div");
+    const selectionBox = document.createElement("div");
+
     innerElement.classList.add("inner");
     if (container) {
       container.innerHTML = "";
@@ -59,6 +62,13 @@ class NumberSlide extends HTMLElement {
       }
       innerElement.appendChild(innerSpacerRight);
       innerSpacerRight.classList.add("spacer");
+      container.appendChild(selectionBox);
+      selectionBox.classList.add("selection-box");
+      for (let i = 0; i < 4; i++) {
+        const boxCorner = document.createElement("div");
+        boxCorner.classList.add("corner");
+        selectionBox.appendChild(boxCorner);
+      }
     }
   }
 

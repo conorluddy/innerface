@@ -1,8 +1,10 @@
 
 :host {
-  color: #ccc;
+  color: #222;
   --button-width: 80px;
+  --glass-color: rgba(215, 215, 215, 0.4);
 }
+
 
 .number-container {
   width: 360px;
@@ -15,57 +17,63 @@
 }
 
 .number-container::before,
-.number-container::after {
+.number-container::after,
+.inner::before,
+.inner::after {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
   width: calc(50% - var(--button-width) / 2);
   pointer-events: none;
-
-
-  /* Add blur effect */
   backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px); /* For Safari */
-  
-  /* Fallback for browsers that don't support backdrop-filter */
-  background: rgba(0, 0, 0, 0.4);
-
+  -webkit-backdrop-filter: blur(5px); 
+  background: var(--glass-color)
 }
 
-.number-container::before {
+.inner::before,
+.inner::after {
+  backdrop-filter: blur(10px);
+}
+
+.number-container::before,
+.inner::before {
   left: 0;
-    /* Create a gradient mask for the blur effect */
-    -webkit-mask-image: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 80%,
-      rgba(0, 0, 0, 0) 100%
-    );
-  
-    mask-image: linear-gradient(
-      to right,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 80%,
-      rgba(0, 0, 0, 0) 100%
-    );
 }
 
-.number-container::after {
+.number-container::after,
+.inner::after {
   right: 0;
+}
+
+.inner::before {
+  width: var(--button-width);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 30%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.inner::after {
+  width: var(--button-width);
   -webkit-mask-image: linear-gradient(
     to left,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) 80%,
+    rgba(0, 0, 0, 1) 30%,
     rgba(0, 0, 0, 0) 100%
   );
   mask-image: linear-gradient(
     to left,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 1) 80%,
+    rgba(0, 0, 0, 1) 30%,
     rgba(0, 0, 0, 0) 100%
   );
 }
+
 
 .inner {
   display: flex;
@@ -78,7 +86,7 @@
   gap: 5px;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  box-shadow: inset 10px 0 20px 0px #000 , inset -10px 0 20px 0px #000
+  /* box-shadow: inset 10px 0 20px 0px #000 , inset -10px 0 20px 0px #000 */
 }
 
 .number-item {
@@ -94,4 +102,82 @@
 .spacer {
   flex-shrink: 0;
   width: 240px;
+}
+
+
+.selection-box {
+  position: absolute;
+  pointer-events: none;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: var(--button-width);
+  height: var(--button-width);
+}
+
+.selection-box .corner {
+  --corner-colours: rgb(204, 255, 0);
+  --selection-border-width: 3px;
+  width: calc(var(--button-width) / 5);
+  height: calc(var(--button-width) / 5);
+  position: absolute;
+  border-color: var(--corner-colours);
+}
+
+.selection-box .corner:nth-of-type(1) {
+  top: 0;
+  left: 0;
+  border-top-width: var(--selection-border-width);
+  border-top-style: solid;
+  border-left-width: var(--selection-border-width);
+  border-left-style: solid;
+}
+
+.selection-box .corner:nth-of-type(2) {
+  top: 0;
+  right: 0;
+  border-top-width: var(--selection-border-width);
+  border-top-style: solid;
+  border-right-width: var(--selection-border-width);
+  border-right-style: solid;
+}
+
+.selection-box .corner:nth-of-type(3) {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: var(--selection-border-width);
+  border-bottom-style: solid;
+  border-right-width: var(--selection-border-width);
+  border-right-style: solid;
+}
+
+.selection-box .corner:nth-of-type(4) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: var(--selection-border-width);
+  border-bottom-style: solid;
+  border-left-width: var(--selection-border-width);
+  border-left-style: solid;
+}
+
+label {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+label span {
+  display: block;
+  transform: translateX(-3.3em);
+}
+
+label span:after {
+  content: '';
+  display: inline-block;
+  width: 40px;
+  height: 15px;
+  transform: translate3d(5px, 10px, 0);
+  border-top: solid 2px #333;
+  border-right: solid 2px #333;
 }
