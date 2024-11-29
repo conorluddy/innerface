@@ -9,7 +9,7 @@ template.innerHTML = `
 `;
 
 class NumberSlide extends HTMLElement {
-  private min: number = 0;
+  private min: number = 1;
   private max: number = 10;
 
   constructor() {
@@ -36,8 +36,8 @@ class NumberSlide extends HTMLElement {
   }
 
   private updateMinMax() {
-    this.min = parseInt(this.getAttribute("min") || "0", 10);
-    this.max = parseInt(this.getAttribute("max") || "9", 10);
+    this.min = parseInt(this.getAttribute("min") || "1", 10);
+    this.max = parseInt(this.getAttribute("max") || "5", 10);
   }
 
   private renderNumbers() {

@@ -102,6 +102,9 @@
 .spacer {
   flex-shrink: 0;
   width: 240px;
+  height: 5px;
+  background: black;
+  margin-top: 38px;
 }
 
 
