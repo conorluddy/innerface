@@ -11,11 +11,25 @@ template.innerHTML = `
 class NumberSlide extends HTMLElement {
   private min: number = 1;
   private max: number = 10;
+  private _value: number = 1;
 
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot?.appendChild(template.content.cloneNode(true));
+  }
+
+  get value(): number {
+    return this._value;
+  }
+
+  set value(newValue: number) {
+    if (newValue >= this.min && newValue <= this.max) {
+      this._value = newValue;
+      this.setAttribute("value", newValue.toString());
+      this.updateScrollPosition();
+      this.dispatchEvent(new Event("change"));
+    }
   }
 
   connectedCallback() {
@@ -24,16 +38,25 @@ class NumberSlide extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["min", "max"];
+    return ["min", "max", "value"];
   }
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (oldValue !== newValue) {
-      this.updateMinMax();
-      this.renderNumbers();
-      requestAnimationFrame(() => {
-        this.setupEventListeners();
-      });
+      if (name === "value") {
+        this.value = parseInt(newValue, 10);
+      } else {
+        this.updateMinMax();
+        this.renderNumbers();
+      }
+      this.setupEventListeners();
+    }
+  }
+
+  private updateScrollPosition() {
+    const container = this.shadowRoot?.querySelector(".number-container");
+    if (container) {
+      container.scrollLeft = (this._value - this.min) * 80;
     }
   }
 
@@ -93,12 +116,13 @@ class NumberSlide extends HTMLElement {
         window.requestAnimationFrame(() => {
           if (lastKnownScrollPosition % 80 === 0) {
             const selectedNumber = lastKnownScrollPosition / 80;
-            const event = new CustomEvent("number-selected", {
-              detail: selectedNumber,
-              bubbles: true,
-              composed: true,
-            });
-            this.dispatchEvent(event);
+            this.value = selectedNumber;
+            // const event = new CustomEvent("number-selected", {
+            //   detail: selectedNumber,
+            //   bubbles: true,
+            //   composed: true,
+            // });
+            // this.dispatchEvent(event);
           }
           ticking = false;
         });
