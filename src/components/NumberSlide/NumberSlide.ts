@@ -4,7 +4,7 @@ const template = document.createElement("template");
 
 template.innerHTML = `
   <style>${css}</style>
-  <label><span>RATING</span></label>
+  <label><span>REPS</span></label>
   <div class="number-container"></div>
 `;
 
@@ -31,7 +31,9 @@ class NumberSlide extends HTMLElement {
     if (oldValue !== newValue) {
       this.updateMinMax();
       this.renderNumbers();
-      this.setupEventListeners();
+      requestAnimationFrame(() => {
+        this.setupEventListeners();
+      });
     }
   }
 
@@ -51,20 +53,22 @@ class NumberSlide extends HTMLElement {
     if (container) {
       container.innerHTML = "";
       container.appendChild(innerElement);
+
       innerElement.appendChild(innerSpacerLeft);
+
       innerSpacerLeft.classList.add("spacer");
+
       for (let i = this.min; i <= this.max; i++) {
         const numberElement = document.createElement("div");
         numberElement.textContent = i.toString();
         numberElement.classList.add("number-item");
         innerElement.appendChild(numberElement);
-
-        numberElement.addEventListener("click", () => this.onNumberClick(i));
       }
       innerElement.appendChild(innerSpacerRight);
       innerSpacerRight.classList.add("spacer");
       container.appendChild(selectionBox);
       selectionBox.classList.add("selection-box");
+
       for (let i = 0; i < 4; i++) {
         const boxCorner = document.createElement("div");
         boxCorner.classList.add("corner");
@@ -73,39 +77,40 @@ class NumberSlide extends HTMLElement {
     }
   }
 
-  private onNumberClick(number: number) {
-    const event = new CustomEvent("number-selected", {
-      detail: number,
-      bubbles: true,
-      composed: true,
-    });
-    this.dispatchEvent(event);
-  }
-
-  // private onScrollStop() {
-  //   console.log("Scrolling stopped");
-  // }
-
   private setupEventListeners() {
     let lastKnownScrollPosition = 0;
     let ticking = false;
 
-    const scrollContainer = this.shadowRoot?.querySelector(
-      ".number-container .inner"
-    );
-    console.log("scrollContainer", scrollContainer);
-    if (scrollContainer) {
-      scrollContainer.addEventListener("scroll", (event) => {
-        lastKnownScrollPosition = scrollContainer.scrollLeft;
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            console.log({ lastKnownScrollPosition, event });
-            ticking = false;
-          });
-          ticking = true;
-        }
-      });
-    }
+    const scrollContainer = this.shadowRoot?.querySelector(".number-container");
+    const inner = this.shadowRoot?.querySelector(".number-container .inner");
+
+    if (!scrollContainer || !inner) return;
+
+    const handleScroll = (event: Event) => {
+      lastKnownScrollPosition = (event.target as Element).scrollLeft + 40;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (lastKnownScrollPosition % 80 === 0) {
+            const selectedNumber = lastKnownScrollPosition / 80;
+            const event = new CustomEvent("number-selected", {
+              detail: selectedNumber,
+              bubbles: true,
+              composed: true,
+            });
+            this.dispatchEvent(event);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // Try attaching the event listener to both elements
+    scrollContainer.addEventListener("scroll", handleScroll, {
+      capture: true,
+      passive: true,
+    });
   }
 }
 
