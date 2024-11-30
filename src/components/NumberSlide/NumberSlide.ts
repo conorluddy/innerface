@@ -19,10 +19,16 @@ class NumberSlide extends HTMLElement {
   private index: number = 0;
   private valuesArray: number[] = [];
 
+  private initialValue: number | null = null;
+
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot?.appendChild(template.content.cloneNode(true));
+  }
+
+  static get observedAttributes() {
+    return ["min", "max", "value", "label", "step"];
   }
 
   connectedCallback() {
@@ -30,11 +36,8 @@ class NumberSlide extends HTMLElement {
     this.renderNumbers();
     window.requestAnimationFrame(() => {
       this.setupEventListeners();
+      this.updateScrollPosition(this.initialValue);
     });
-  }
-
-  static get observedAttributes() {
-    return ["min", "max", "value", "label", "step"];
   }
 
   get value(): number {
@@ -61,8 +64,11 @@ class NumberSlide extends HTMLElement {
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (oldValue !== newValue) {
       if (name === "value") {
+        // Store the first value coming from the HTML
+        if (this.initialValue === null) {
+          this.initialValue = parseFloat(newValue);
+        }
         this.value = parseFloat(newValue);
-        this.updateScrollPosition();
       } else {
         this.updateAttributes();
         this.renderNumbers();
@@ -70,10 +76,13 @@ class NumberSlide extends HTMLElement {
     }
   }
 
-  private updateScrollPosition() {
-    const container = this.shadowRoot?.querySelector(".number-container");
-    if (container) {
-      container.scrollLeft = this.index * UNIT_SIZE;
+  private updateScrollPosition(value: number | null) {
+    const container = this.shadowRoot?.querySelector(
+      ".number-container .inner"
+    );
+    if (container && value !== null) {
+      const index = this.valuesArray.findIndex((v) => v === value);
+      container.scrollLeft = index * UNIT_SIZE;
     }
   }
 
