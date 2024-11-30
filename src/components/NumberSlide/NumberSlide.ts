@@ -10,15 +10,13 @@ template.innerHTML = `
   <div class="number-container"></div>
 `;
 
-class NumberSlide extends HTMLElement {
+class NumberSlideClass extends HTMLElement {
   private label: string = "Number";
   private step: number = 1;
   private min: number = 1;
   private max: number = 10;
-
   private index: number = 0;
   private valuesArray: number[] = [];
-
   private initialValue: number | null = null;
 
   constructor() {
@@ -53,8 +51,19 @@ class NumberSlide extends HTMLElement {
   set value(newValue: number) {
     // Invalid:: Return early
     if (newValue < this.min || newValue > this.max) return;
+
+    // const oldValue = this.value;
+    // if (newValue === oldValue) return;
+
     // Convert the index to the actual number seen in the UI
     this.setAttribute("value", this.valuesArray[this.valueIndex].toString());
+
+    const event = new CustomEvent("value-changed", {
+      detail: { newValue },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(event);
   }
 
   get valueIndex(): number {
@@ -165,5 +174,8 @@ class NumberSlide extends HTMLElement {
 }
 
 export default () => {
-  window.customElements.define("number-slide", NumberSlide);
+  window.customElements.define("number-slide", NumberSlideClass);
 };
+
+export type NumberSlide = typeof NumberSlideClass &
+  Element & { detail: { newValue: number }; value: number };

@@ -112,3 +112,29 @@ background-noise {
   flex-direction: column;
   gap: 40px;
 }
+
+.summary {
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 2rem;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  /* justify-items: center; */
+  /* justify-content: center; */
+  padding-left: 40px;
+  height: 100px;
+
+  span {
+    display: inline-block;
+    width: 90px;
+  }
+  span:first-child {
+    text-align: right;
+    font-weight: bold;
+  }
+  span:last-child {
+    text-align: left;
+  }
+  
+}
