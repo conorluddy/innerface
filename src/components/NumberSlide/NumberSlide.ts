@@ -2,6 +2,8 @@ import css from "./NumberSlide.css?raw";
 
 const template = document.createElement("template");
 
+const UNIT_SIZE = 80;
+
 template.innerHTML = `
   <style>${css}</style>
   <label><span>KG</span></label>
@@ -10,9 +12,9 @@ template.innerHTML = `
 
 class NumberSlide extends HTMLElement {
   private label: string = "Number";
+  private step: number = 1;
   private min: number = 1;
   private max: number = 10;
-  private step: number = 1;
 
   private index: number = 0;
   private valuesArray: number[] = [];
@@ -50,8 +52,6 @@ class NumberSlide extends HTMLElement {
     if (newValue < this.min || newValue > this.max) return;
     // Convert the index to the actual number seen in the UI
     this.setAttribute("value", this.valuesArray[this.valueIndex].toString());
-
-    // this.updateScrollPosition();
   }
 
   get valueIndex(): number {
@@ -71,12 +71,9 @@ class NumberSlide extends HTMLElement {
   }
 
   private updateScrollPosition() {
-    console.log("this.valueIndex", this.valueIndex);
-
     const container = this.shadowRoot?.querySelector(".number-container");
     if (container) {
-      console.log("this.valueIndex * 80", this.valueIndex * 80);
-      container.scrollLeft = this.valueIndex * 80;
+      container.scrollLeft = this.index * UNIT_SIZE;
     }
   }
 
@@ -139,12 +136,10 @@ class NumberSlide extends HTMLElement {
       lastKnownScrollPosition = (event.target as Element).scrollLeft + 40;
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          if (lastKnownScrollPosition % 80 === 0) {
-            const selectedIndex = lastKnownScrollPosition / 80;
-
-            console.log(this.valuesArray[selectedIndex - 1]);
-
-            this.value = this.valuesArray[selectedIndex - 1];
+          if (lastKnownScrollPosition % UNIT_SIZE === 0) {
+            const selectedIndex = lastKnownScrollPosition / UNIT_SIZE - 1;
+            this.index = selectedIndex;
+            this.value = this.valuesArray[selectedIndex];
           }
           ticking = false;
         });
