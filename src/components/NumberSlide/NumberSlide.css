@@ -74,7 +74,6 @@
   );
 }
 
-
 .inner {
   display: flex;
   flex-wrap: nowrap;
@@ -164,9 +163,10 @@
 
 label {
   position: relative;
+  right: 36%;
   display: block;
   width: 100%;
-  text-align: center;
+  text-align: right;
 }
 
 label span {
