@@ -18,6 +18,7 @@ class NumberSlideClass extends HTMLElement {
   private index: number = 0;
   private valuesArray: number[] = [];
   private initialValue: number | null = null;
+  private isScrolling: boolean = false;
 
   constructor() {
     super();
@@ -109,6 +110,7 @@ class NumberSlideClass extends HTMLElement {
     const innerSpacerRight = document.createElement("div");
     const selectionBox = document.createElement("div");
     const label = this.shadowRoot?.querySelector("label span");
+    this.valuesArray = [];
 
     innerElement.classList.add("inner");
 
@@ -144,6 +146,7 @@ class NumberSlideClass extends HTMLElement {
   private setupEventListeners() {
     let lastKnownScrollPosition = 0;
     let ticking = false;
+    const selectionBox = this.shadowRoot?.querySelector(".selection-box");
 
     const scrollContainer = this.shadowRoot?.querySelector(".number-container");
     const inner = this.shadowRoot?.querySelector(".number-container .inner");
@@ -151,6 +154,8 @@ class NumberSlideClass extends HTMLElement {
     if (!scrollContainer || !inner) return;
 
     const handleScroll = (event: Event) => {
+      this.isScrolling = true;
+      selectionBox?.classList.add("is-scrolling");
       lastKnownScrollPosition = (event.target as Element).scrollLeft + 40;
       if (!ticking) {
         window.requestAnimationFrame(() => {
@@ -158,11 +163,20 @@ class NumberSlideClass extends HTMLElement {
             const selectedIndex = lastKnownScrollPosition / UNIT_SIZE - 1;
             this.index = selectedIndex;
             this.value = this.valuesArray[selectedIndex];
+            // this.isScrolling = false
+
+            this.isScrolling = false;
+            selectionBox?.classList.remove("is-scrolling");
           }
           ticking = false;
         });
         ticking = true;
       }
+
+      // setTimeout(() => {
+      // this.isScrolling = false
+      // selectionBox?.classList.remove('is-scrolling')
+      // }, 2000)
     };
 
     // Try attaching the event listener to both elements

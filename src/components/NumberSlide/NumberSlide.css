@@ -93,8 +93,12 @@
   line-height: 80px;
   flex-shrink: 0;
   scroll-snap-align: center;
-  font-size: 1.5rem;
+  font-size: 1.65rem;
   text-align: center;
+
+  font-family: "Tomorrow", sans-serif;
+  font-weight: 700;
+  font-style: normal;
 }
 
 .spacer {
@@ -114,15 +118,27 @@
   transform: translate3d(-50%, -50%, 0);
   width: var(--button-width);
   height: var(--button-width);
+  transition: transform 120ms ease-out;
+  transform-origin: center center;
+}
+
+.selection-box.is-scrolling {
+  transform: translate3d(-50%, -50%, 0) scale(0.72);
+  /* backdrop-filter: contrast(0.5); */
 }
 
 .selection-box .corner {
-  --corner-colours: rgb(204, 255, 0);
+  --corner-colours: rgb(0, 170, 255);
   --selection-border-width: 3px;
   width: calc(var(--button-width) / 5);
   height: calc(var(--button-width) / 5);
   position: absolute;
   border-color: var(--corner-colours);
+  transition: border-color 120ms ease-out;
+}
+
+.selection-box.is-scrolling .corner {
+  border-color: white;
 }
 
 .selection-box .corner:nth-of-type(1) {
